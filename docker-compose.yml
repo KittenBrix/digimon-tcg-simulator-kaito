@@ -1,0 +1,48 @@
+version: '3'
+services:
+
+  # MongoDB Service
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  # Spring Boot (OpenJDK) Service
+  backend:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    container_name: backend-app
+    environment:
+      - MONGO_DB_URI=mongodb://root:example@mongodb:27017
+      - PORT=27017
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+
+  # Node.js Service
+  nodejs:
+    build:
+      context: .
+      dockerfile: frontend.dockerfile
+    container_name: frontend-app
+    ports:
+      - "5173:5173"
+    volumes:
+      # - "/c/Users/Lucas\ Phillips/digimon-tcg-simulator-kaito/frontend:/app"
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+
+
+volumes:
+  mongodb-data:

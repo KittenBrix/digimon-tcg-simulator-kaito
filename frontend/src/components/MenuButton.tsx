@@ -5,7 +5,6 @@ import {useStore} from "../hooks/useStore.ts";
 import {playButtonClickSfx} from "../utils/sound.ts";
 
 export default function MenuButton({ name, path }: { name: string, path: string }) {
-
     const navigate = useNavigate();
     const me = useStore((state) => state.me);
 
